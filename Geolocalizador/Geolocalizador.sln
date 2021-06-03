@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API_GEO", "API_GEO.csproj", "{5B96B1AA-2435-49E5-9636-FCF4425C36D9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5B96B1AA-2435-49E5-9636-FCF4425C36D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B96B1AA-2435-49E5-9636-FCF4425C36D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B96B1AA-2435-49E5-9636-FCF4425C36D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B96B1AA-2435-49E5-9636-FCF4425C36D9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {11DD959B-4E36-4003-A365-D503B8CF049C}
+	EndGlobalSection
+EndGlobal
