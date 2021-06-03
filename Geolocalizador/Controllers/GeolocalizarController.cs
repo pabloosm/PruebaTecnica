@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using API_GEO.DB;
+using API_GEO.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +15,13 @@ namespace API_GEO.Controllers
     [ApiController]
     public class GeolocalizarController : ControllerBase
     {
-        public GeolocalizarController()
-        {
 
+        private AbstractPedidosDBContext _dBContext;
+        private List<Task> _pedidos = new List<Task>();
+
+        public GeolocalizarController(AbstractPedidosDBContext pedidosDBContext)
+        {
+            this._dBContext = pedidosDBContext;
         }
 
         // GET: api/<GeolocalizarController>
@@ -26,15 +33,61 @@ namespace API_GEO.Controllers
 
         // GET api/<GeolocalizarController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<IActionResult> Get_Async(int id)
         {
-            return "value";
+            try
+            {
+                if ( id > 0 )
+                {
+                    // busco id en la base
+                    var res = 0;
+
+                    
+                    if ( res > 0 )
+                    {
+                        // _pedidos.Add(); hago reques al otro servicio
+
+                        //return StatusCode(StatusCodes.Status200OK , );
+                    }
+
+                }
+
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            catch ( Exception )
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+                //llogueo error
+            }
         }
 
         // POST api/<GeolocalizarController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post_Async([FromBody] PedidoModel pedido)
         {
+            try
+            {
+                if(pedido != null)
+                {
+                    var res = 0;
+                    
+                    //verifico si inserto correctamente en la base el pedido
+                    if(res > 0 )
+                    {
+                        // _pedidos.Add(); hago reques al otro servicio
+
+                        return StatusCode(StatusCodes.Status202Accepted , pedido.id);
+                    }
+
+                }
+
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            catch ( Exception )
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+                //llogueo error
+            }
         }
 
         // PUT api/<GeolocalizarController>/5
