@@ -24,12 +24,6 @@ namespace API_GEO.Controllers
             this._dBContext = pedidosDBContext;
         }
 
-        // GET: api/<GeolocalizarController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1" , "value2" };
-        }
 
         // GET api/<GeolocalizarController>/5
         [HttpGet("{id}")]
@@ -80,6 +74,8 @@ namespace API_GEO.Controllers
 
                         return StatusCode(StatusCodes.Status202Accepted , pedido.id);
                     }
+                    else
+                        return StatusCode(StatusCodes.Status304NotModified);
 
                 }
 
@@ -92,16 +88,5 @@ namespace API_GEO.Controllers
             }
         }
 
-        // PUT api/<GeolocalizarController>/5
-        [HttpPut("{id}")]
-        public void Put(int id , [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<GeolocalizarController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }
