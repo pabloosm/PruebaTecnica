@@ -12,6 +12,11 @@ namespace API_GEO.Controllers
     [ApiController]
     public class GeolocalizarController : ControllerBase
     {
+        public GeolocalizarController()
+        {
+
+        }
+
         // GET: api/<GeolocalizarController>
         [HttpGet]
         public IEnumerable<string> Get()
