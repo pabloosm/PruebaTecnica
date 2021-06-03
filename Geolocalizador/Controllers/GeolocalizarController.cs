@@ -16,10 +16,10 @@ namespace API_GEO.Controllers
     public class GeolocalizarController : ControllerBase
     {
 
-        private AbstractPedidosDBContext _dBContext;
+        private PedidosDBContext _dBContext;
         private List<Task> _pedidos = new List<Task>();
 
-        public GeolocalizarController(AbstractPedidosDBContext pedidosDBContext)
+        public GeolocalizarController(PedidosDBContext pedidosDBContext)
         {
             this._dBContext = pedidosDBContext;
         }
@@ -69,10 +69,12 @@ namespace API_GEO.Controllers
             {
                 if(pedido != null)
                 {
-                    var res = 0;
-                    
+                    await this._dBContext.PEDIDOS.AddAsync(pedido);
+
+                    var res = await this._dBContext.SaveChangesAsync();
+
                     //verifico si inserto correctamente en la base el pedido
-                    if(res > 0 )
+                    if (res > 0 )
                     {
                         // _pedidos.Add(); hago reques al otro servicio
 
@@ -83,7 +85,7 @@ namespace API_GEO.Controllers
 
                 return StatusCode(StatusCodes.Status400BadRequest);
             }
-            catch ( Exception )
+            catch ( Exception ex )
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
                 //llogueo error
