@@ -76,10 +76,9 @@ namespace API_GEO.Controllers
                     if ( res > 0 )
                     {
 
-                        await Task.Run(()=> _GeodecodificadorApiService.Get_Coordenada_Async(pedido).ContinueWith(x => this.API_DB.Uptdate(x.Result)));
+                        await _GeodecodificadorApiService.Get_Coordenada_Async(pedido).ContinueWith(x => this.API_DB.Uptdate(x.Result));
 
                         return StatusCode(StatusCodes.Status202Accepted , pedido.id);
-
 
                     }
                     else

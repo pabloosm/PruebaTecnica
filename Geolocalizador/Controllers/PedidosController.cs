@@ -22,7 +22,7 @@ namespace API_GEO.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put_Async([FromBody] ICoordenadas coordenadas)
+        public async Task<IActionResult> Put_Async([FromBody] Coordenadas coordenadas)
         {
             try
             {

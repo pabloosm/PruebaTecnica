@@ -19,7 +19,6 @@ namespace GEODECODIFICADOR.APIs
                 var fgRequest = FGRFactory.CreateFowardGeocoderRequest(response);
                 var coordenadas = await fowardGeocoder.Geocode(fgRequest);
 
-
                 response.coordenadas = new Coordenadas(coordenadas[0].Longitude.ToString() , coordenadas[0].Latitude.ToString());
 
                 return response;
