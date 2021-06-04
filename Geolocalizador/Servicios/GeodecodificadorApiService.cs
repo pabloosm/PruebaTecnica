@@ -21,20 +21,39 @@ namespace API_GEO.Servicios
             this._httpClientFactory = httpClientFactory;
         }
 
-        public async Task Get_Coordenada_Async(PedidoModel pedido)
+        public async Task<Request> Get_Coordenada_Async(PedidoModel pedido)
         {
             try
             {
-                var http = _httpClientFactory.CreateClient("GeolocalizadorAPI");
+                using ( var http = _httpClientFactory.CreateClient("GeolocalizadorAPI") )
+                {
 
-                var request = new HttpRequestMessage(HttpMethod.Get , "Decodificar");
-                request.Content = new StringContent( JsonConvert.SerializeObject(pedido), Encoding.UTF8 , "application/json");
+                    using ( var request = new HttpRequestMessage(HttpMethod.Get , "Decodificar") )
+                    {
+                        var req = new Request()
+                        {
+                            idRequest = pedido.id ,
+                            calle = pedido.calle ,
+                            ciudad = pedido.ciudad ,
+                            codigo_postal = pedido.codigo_postal ,
+                            provincia = pedido.provincia ,
+                            pais = pedido.pais ,
+                            numero = pedido.numero
+                        };
 
-                var resonse = await  http.SendAsync(request);
+                        request.Content = new StringContent(JsonConvert.SerializeObject(req) , Encoding.UTF8 , "application/json");
+
+                        using ( var resonse = await http.SendAsync(request) )
+                        {
+                            return JsonConvert.DeserializeObject<Request>(await resonse.Content.ReadAsStringAsync());
+                        }
+                    }
+                }
 
             }
             catch ( Exception ex )
             {
+                return null;
                 //logueo error
             }
         }

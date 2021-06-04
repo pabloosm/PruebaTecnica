@@ -20,14 +20,16 @@ namespace API_GEO.Controllers
     public class GeolocalizarController : ControllerBase
     {
         private List<Task> _pedidos = new List<Task>();
-        private PedidosDBContext _dBContext;
+        //private PedidosDBContext _dBContext;
         private GeodecodificadorApiService _GeodecodificadorApiService;
+        private API_DB API_DB;
 
 
-        public GeolocalizarController(PedidosDBContext pedidosDBContext, IHttpClientFactory httpClient)
+        public GeolocalizarController(/*PedidosDBContext pedidosDBContext,*/API_DB aPI_DB, IHttpClientFactory httpClient)
         {
-            this._dBContext = pedidosDBContext;
+            //this._dBContext = pedidosDBContext;
             this._GeodecodificadorApiService = new GeodecodificadorApiService(httpClient);
+            this.API_DB = aPI_DB;
         }
 
 
@@ -41,12 +43,12 @@ namespace API_GEO.Controllers
                 if ( ok )
                 {
                     // busco id en la base
-                    CoordenadasDireccionesModel coordenadasDireccionesModel = await  this._dBContext.COORDENADAS_PEDIDOS.AsNoTracking().FirstOrDefaultAsync(x=>x.id_pedido == lid);
-                    if ( coordenadasDireccionesModel != null )
-                    {
+                    //CoordenadasDireccionesModel coordenadasDireccionesModel = await  this._dBContext.COORDENADAS_PEDIDOS.AsNoTracking().FirstOrDefaultAsync(x=>x.id_pedido == lid);
+                    //if ( coordenadasDireccionesModel != null )
+                    //{
 
-                        return StatusCode(StatusCodes.Status200OK , coordenadasDireccionesModel);
-                    }
+                    //    return StatusCode(StatusCodes.Status200OK , coordenadasDireccionesModel);
+                    //}
 
                 }
 
@@ -68,19 +70,17 @@ namespace API_GEO.Controllers
                 if(pedido != null)
                 {
                     var coordenada = new CoordenadasDireccionesModel() { estado = Constantes.PROCESANDO };
-                    await this._dBContext.PEDIDOS.AddAsync(pedido);
-                    var res = await this._dBContext.SaveChangesAsync();
-                    coordenada.id_pedido = pedido.id;
-                    await this._dBContext.COORDENADAS_PEDIDOS.AddAsync(coordenada);
-                    res = await this._dBContext.SaveChangesAsync();
+                    int res = await this.API_DB.NuevoPedido(pedido , coordenada);
 
                     //verifico si inserto correctamente en la base el pedido
-                    if (res > 0 )
+                    if ( res > 0 )
                     {
 
-                        this._pedidos.Add( _GeodecodificadorApiService.Get_Coordenada_Async(pedido));
+                        await Task.Run(()=> _GeodecodificadorApiService.Get_Coordenada_Async(pedido).ContinueWith(x => this.API_DB.Uptdate(x.Result)));
 
                         return StatusCode(StatusCodes.Status202Accepted , pedido.id);
+
+
                     }
                     else
                         return StatusCode(StatusCodes.Status304NotModified);
@@ -95,6 +95,7 @@ namespace API_GEO.Controllers
                 //llogueo error
             }
         }
+
 
     }
 }

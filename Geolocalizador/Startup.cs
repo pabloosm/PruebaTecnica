@@ -31,12 +31,14 @@ namespace Geolocalizador
         {
             services.AddControllers();
             services.AddDbContextPool<PedidosDBContext>(options => options.UseSqlite(Configuration.GetConnectionString("cs_sqlite")));
+            services.AddTransient<API_DB>();
             services.AddHttpClient<IGeodecodificadorApiService,GeodecodificadorApiService>("GeolocalizadorAPI" , client =>
             {
                 client.BaseAddress = new Uri("https://localhost:44352/");
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Add(HeaderNames.Accept , "application/json");
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

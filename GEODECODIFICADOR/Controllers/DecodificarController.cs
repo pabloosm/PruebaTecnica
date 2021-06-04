@@ -32,13 +32,13 @@ namespace GEODECODIFICADOR.Controllers
             {
                 if ( request != null && IsValidRequest(request) )
                 {
-                    this._pedidos.Add(
-                         await Task.Factory.StartNew(async () =>
-                        {
+                    //this._pedidos.Add(
+                    //     await Task.Factory.StartNew(async () =>
+                    //    {
                             var task =  await this._streetMaps.GetCoordenadas_Async(request);
-                            await this._ApiGeoService.Post_Coordenada_Async(task.coordenadas);
-                        }));
-                    return StatusCode(StatusCodes.Status202Accepted);
+                        //    await this._ApiGeoService.Put_Coordenada_Async(task.coordenadas);
+                        //},TaskCreationOptions.LongRunning | TaskCreationOptions.AttachedToParent));
+                    return StatusCode(StatusCodes.Status202Accepted,task);
                 }
 
 

@@ -21,8 +21,8 @@ namespace API_GEO.Controllers
             this._dBContext = dBContext;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post_Async([FromBody] ICoordenadas coordenadas)
+        [HttpPut]
+        public async Task<IActionResult> Put_Async([FromBody] ICoordenadas coordenadas)
         {
             try
             {

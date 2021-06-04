@@ -15,6 +15,5 @@ namespace API_GEO.DB
         {
             Database.EnsureCreated();
         }
-
     }
 }

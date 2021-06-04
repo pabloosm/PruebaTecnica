@@ -1,10 +1,8 @@
 ﻿using BibliotecaClases;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,16 +17,25 @@ namespace GEODECODIFICADOR.Servicios
             this._httpClientFactory = httpClientFactory;
         }
 
-        public async Task Post_Coordenada_Async(ICoordenadas pedido)
+        public async Task Put_Coordenada_Async(ICoordenadas pedido)
         {
             try
             {
-                var http = _httpClientFactory.CreateClient("APIGeo");
+  
 
-                var request = new HttpRequestMessage(HttpMethod.Post , "api/Pedidos");
-                request.Content = new StringContent(JsonConvert.SerializeObject(pedido) , Encoding.UTF8 , "application/json");
+                using ( var http = _httpClientFactory.CreateClient("APIGeo") )
+                {
 
-                var resonse = await http.SendAsync(request);
+                    using ( var request = new HttpRequestMessage(HttpMethod.Put , "api/pedidos") )
+                    {
+                        request.Content = new StringContent(JsonConvert.SerializeObject(pedido) , Encoding.UTF8 , "application/json");
+
+                        using ( var resonse = await http.SendAsync(request) )
+                        {
+
+                        }
+                    }
+                }
 
             }
             catch ( Exception ex )
