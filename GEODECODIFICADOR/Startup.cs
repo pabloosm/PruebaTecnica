@@ -1,10 +1,9 @@
-using API_GEO.DB;
-using API_GEO.Servicios;
+using GEODECODIFICADOR.APIs;
+using GEODECODIFICADOR.Servicios;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -15,7 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Geolocalizador
+namespace GEODECODIFICADOR
 {
     public class Startup
     {
@@ -30,10 +29,10 @@ namespace Geolocalizador
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddDbContextPool<PedidosDBContext>(options => options.UseSqlite(Configuration.GetConnectionString("cs_sqlite")));
-            services.AddHttpClient<IGeodecodificadorApiService,GeodecodificadorApiService>("GeolocalizadorAPI" , client =>
+            services.AddTransient<IAPI_OnStreetMaps , API_OnStreetMaps>();
+            services.AddHttpClient<IApiGeoService , ApiGeoService>("APIGeo" , client =>
             {
-                client.BaseAddress = new Uri("https://localhost:44352/");
+                client.BaseAddress = new Uri("http://localhost:44351/");
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Add(HeaderNames.Accept , "application/json");
             });

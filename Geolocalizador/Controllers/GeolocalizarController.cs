@@ -1,10 +1,14 @@
 ﻿using API_GEO.DB;
 using API_GEO.Models;
+using API_GEO.Servicios;
+using BibliotecaClases;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -15,33 +19,33 @@ namespace API_GEO.Controllers
     [ApiController]
     public class GeolocalizarController : ControllerBase
     {
-
-        private PedidosDBContext _dBContext;
         private List<Task> _pedidos = new List<Task>();
+        private PedidosDBContext _dBContext;
+        private GeodecodificadorApiService _GeodecodificadorApiService;
 
-        public GeolocalizarController(PedidosDBContext pedidosDBContext)
+
+        public GeolocalizarController(PedidosDBContext pedidosDBContext, IHttpClientFactory httpClient)
         {
             this._dBContext = pedidosDBContext;
+            this._GeodecodificadorApiService = new GeodecodificadorApiService(httpClient);
         }
 
 
         // GET api/<GeolocalizarController>/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get_Async(int id)
+        public async Task<IActionResult> Get_Async(string sid)
         {
             try
             {
-                if ( id > 0 )
+                var ok = long.TryParse(sid , out long lid);
+                if ( ok )
                 {
                     // busco id en la base
-                    var res = 0;
-
-                    
-                    if ( res > 0 )
+                    CoordenadasDireccionesModel coordenadasDireccionesModel = await  this._dBContext.COORDENADAS_PEDIDOS.AsNoTracking().FirstOrDefaultAsync(x=>x.id_pedido == lid);
+                    if ( coordenadasDireccionesModel != null )
                     {
-                        // _pedidos.Add(); hago reques al otro servicio
 
-                        //return StatusCode(StatusCodes.Status200OK , );
+                        return StatusCode(StatusCodes.Status200OK , coordenadasDireccionesModel);
                     }
 
                 }
@@ -63,14 +67,18 @@ namespace API_GEO.Controllers
             {
                 if(pedido != null)
                 {
+                    var coordenada = new CoordenadasDireccionesModel() { estado = Constantes.PROCESANDO };
                     await this._dBContext.PEDIDOS.AddAsync(pedido);
-
                     var res = await this._dBContext.SaveChangesAsync();
+                    coordenada.id_pedido = pedido.id;
+                    await this._dBContext.COORDENADAS_PEDIDOS.AddAsync(coordenada);
+                    res = await this._dBContext.SaveChangesAsync();
 
                     //verifico si inserto correctamente en la base el pedido
                     if (res > 0 )
                     {
-                        // _pedidos.Add(); hago reques al otro servicio
+
+                        this._pedidos.Add( _GeodecodificadorApiService.Get_Coordenada_Async(pedido));
 
                         return StatusCode(StatusCodes.Status202Accepted , pedido.id);
                     }

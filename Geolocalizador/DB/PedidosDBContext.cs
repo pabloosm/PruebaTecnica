@@ -10,9 +10,11 @@ namespace API_GEO.DB
     public class PedidosDBContext : DbContext
     {
         public DbSet<PedidoModel> PEDIDOS { get; set; }
+        public DbSet<CoordenadasDireccionesModel> COORDENADAS_PEDIDOS { get; set; }
         public PedidosDBContext(DbContextOptions<PedidosDBContext> options):base(options)
         {
             Database.EnsureCreated();
         }
+
     }
 }
